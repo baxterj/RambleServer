@@ -1,0 +1,17 @@
+{% extends 'rambleon/base.html' %}
+
+{% block title %} Routes list {% endblock %}
+
+{% block content %}
+
+{% if route_list %}
+    <ul>
+    {% for route in route_list %}
+        <li><a href="/route/{{ route.id }}/">{{ route.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No routes are available.</p>
+{% endif %}
+
+{% endblock %}
