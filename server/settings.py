@@ -12,7 +12,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# if bool(os.environ.get('HEROKU_DEV', False)):
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -24,8 +23,7 @@ DATABASES = {
     }
 }
 
-#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-#DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
