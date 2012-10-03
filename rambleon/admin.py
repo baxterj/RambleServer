@@ -10,7 +10,7 @@ class RoutesAdmin(admin.ModelAdmin):
 		(None,               {'fields': ['name']}),
 		('Date information', {'fields': ['creation_date', 'update_date'], 'classes': ['collapse']}),
 	]
-	inlines = [ChoiceInline]
+	inlines = [PointInline]
 	list_display = ('name', 'creation_date', 'update_date')
 
 admin.site.register(Route, RoutesAdmin)
