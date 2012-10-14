@@ -12,10 +12,10 @@ class Route(models.Model):
 		return self.name
 
 class PathPoint(models.Model):
-	route = models.ForeignKey(Route)
+	route = models.ForeignKey(Route, related_name='pathpoints')
 	orderNum = models.IntegerField()
-	lat = models.DecimalField(max_digits=10, decimal_places=5)
-	lng = models.DecimalField(max_digits=10, decimal_places=5)
+	lat = models.DecimalField(max_digits=10, decimal_places=6)
+	lng = models.DecimalField(max_digits=10, decimal_places=6)
 
 	def __unicode__(self):
 		return str(self.lat) + ' :: ' + str(self.lng)
