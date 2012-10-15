@@ -5,7 +5,7 @@
 
 {% block content %}
 <ul>
-{% for point in route.pathpoint_set.all %}
+{% for point in route.pathpoints_set.all %}
     <li>{{ point.orderNum }} -- {{ point.lat }} -- {{ point.lng }}</li>
 {% endfor %}
 </ul>
