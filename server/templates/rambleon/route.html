@@ -5,10 +5,8 @@
 
 {% block content %}
 <ul>
-{% for point in route.pathpoint_set.all %}
+{% for point in route.pathpoints.all %}
     <li>{{ point.orderNum }} -- {{ point.lat }} -- {{ point.lng }}</li>
 {% endfor %}
 </ul>
 {% endblock %}
-
-{{ route.pathpoint_set.all }}
