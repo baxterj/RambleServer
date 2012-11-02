@@ -32,6 +32,8 @@ DATABASES = {
 # In a Windows environment this must be set to your system time zone.
 TIME_ZONE = 'Europe/London'
 
+INTERNAL_IPS = ('127.0.0.1',)
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -94,6 +96,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+
+
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -101,6 +105,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    #django debug toolbar, needs to come after any other middleware that encodes the response's content
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
 )
 
 ROOT_URLCONF = 'server.urls'
@@ -128,6 +136,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'rambleon',
     'tastypie',
+    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -158,3 +167,4 @@ LOGGING = {
         },
     }
 }
+

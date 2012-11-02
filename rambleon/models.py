@@ -18,4 +18,4 @@ class PathPoint(models.Model):
 	lng = models.DecimalField(max_digits=10, decimal_places=6)
 
 	def __unicode__(self):
-		return str(self.lat) + ' :: ' + str(self.lng)
+		return self.orderNum
