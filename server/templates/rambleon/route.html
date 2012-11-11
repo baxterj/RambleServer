@@ -9,4 +9,10 @@
     <li>{{ point.orderNum }} -- {{ point.lat }} -- {{ point.lng }}</li>
 {% endfor %}
 </ul>
+User: {{route.user}} <br />
+Keywords: 
+{% for word in route.keywords.all %}
+{{word.keyword}}, 
+{% endfor %}
+
 {% endblock %}
