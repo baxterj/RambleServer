@@ -1,4 +1,4 @@
-from rambleon.models import User, Route, PathPoint, Keyword, Note, Image, SpeedTrackData, Favourite, DoneIt, HasKeyword
+from rambleon.models import *
 from django.contrib import admin
 
 class PointInline(admin.TabularInline):
@@ -49,3 +49,8 @@ class SpeedTrackDataAdmin(admin.ModelAdmin):
 	list_display = ('user', 'secondsElapsed', 'distanceTravelled')
 
 admin.site.register(SpeedTrackData, SpeedTrackDataAdmin)
+
+class ApiKeysAdmin(admin.ModelAdmin):
+	list_display = ('user', 'key')
+
+admin.site.register(ApiKeys, ApiKeysAdmin)

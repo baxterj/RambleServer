@@ -6,13 +6,13 @@ admin.autodiscover()
 
 #enable tastypie for RESTful interaction
 from tastypie.api import Api
-from rambleon.api import RouteResource, PathPointResource
+from rambleon.api import *
 
 v1_api = Api(api_name='v1')
 v1_api.register(RouteResource())
 v1_api.register(PathPointResource())
-
-
+v1_api.register(UserResource())
+v1_api.register(ApiKeysResource())
 
 
 urlpatterns = patterns('',

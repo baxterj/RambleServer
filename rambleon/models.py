@@ -91,3 +91,6 @@ class SpeedTrackData(models.Model):
 	def __unicode__(self):
 		return str(self.user) + ' on ' + str(self.dateRecorded)
 
+class ApiKeys(models.Model):
+	user = models.ForeignKey(User)
+	key = models.CharField(max_length=64)
