@@ -47,14 +47,13 @@ class ApiKeysResource(ModelResource):
 		limit = 1
 		authentication = Authentication()
 		authorization = MyLoginAuthorization()
-		#always_return_data = True
+		always_return_data = True
 
 	def dehydrate(self, bundle):
 		bundle.data = {}
+		print 'trying dehydrate'
 		#bundle.data['key'] = checkLogin(bundle.request.POST)
-		bundle.data['key'] = checkLogin(name='john351', passw='adgsdgdsagsg')
+		#bundle.data['key'] = checkLogin(name='john351', passw='adgsdgdsagsg')
 		#bundle.data['key'] = checkLogin(bundle.request.GET.get('user'), bundle.request.GET.get('passw'))
+		bundle.data['key'] = checkLogin(bundle.request.GET)
 		return bundle
-
-
-
