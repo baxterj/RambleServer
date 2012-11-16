@@ -14,3 +14,6 @@ def route(request, route_id):
 	route = get_object_or_404(Route, pk=route_id)
 	return render_to_response('rambleon/route.html', {'route': route})#, 'points': route.pathpoint_set().all()})
 	#return render_to_response('rambleon/route.html')
+
+def login(request):
+	return render_to_response('rambleon/login.html')

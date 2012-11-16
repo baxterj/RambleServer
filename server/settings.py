@@ -28,7 +28,7 @@ DATABASES = {
 }
 
 #comment this line for local testing, remember to uncomment for heroku
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -110,6 +110,8 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'cors.middleware.AllowOriginMiddleware',
+
     #django debug toolbar, needs to come after any other middleware that encodes the response's content
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     
@@ -141,6 +143,7 @@ INSTALLED_APPS = (
     'rambleon',
     'tastypie',
     'debug_toolbar',
+    'cors',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -171,4 +174,5 @@ LOGGING = {
         },
     }
 }
+
 

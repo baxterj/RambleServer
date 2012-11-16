@@ -1,0 +1,41 @@
+{% extends 'rambleon/base.html' %}
+
+{% block title %} Ramble Online - Login {% endblock %}
+
+{% block content %}
+
+
+Username: <input type="text" name="user" id="loginUser"><br />
+Password: <input type="password" name="pass" id="loginPass">
+<button onClick="sendData();" name="Send">Send Data</Button>
+
+<script type="text/javascript">
+function sendData(){
+	var data = JSON.stringify({
+		"user": $('#loginUser').val(),
+		"passw": $('#loginPass').val()
+	});
+
+	$.ajax({
+		url: 'http://localhost:8000/api/v1/login/?	format=json',
+		type: 'GET',
+		contentType: 'application/json',
+		data: data,
+		dataType: 'json',
+		crossDomain: true,
+		//processData: false,
+		success: function(data, status, jqXHR) {
+			alert(data.objects[0].key)
+		}
+	})
+
+}
+
+
+
+
+</script>
+
+
+
+{% endblock %}
