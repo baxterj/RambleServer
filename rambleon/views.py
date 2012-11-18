@@ -17,3 +17,6 @@ def route(request, route_id):
 
 def login(request):
 	return render_to_response('rambleon/login.html')
+
+def register(request):
+	return render_to_response('rambleon/register.html')

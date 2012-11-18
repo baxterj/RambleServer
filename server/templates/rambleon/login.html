@@ -6,8 +6,12 @@
 
 
 Username: <input type="text" name="user" id="loginUser"><br />
-Password: <input type="password" name="pass" id="loginPass">
+Password: <input type="password" name="pass" id="loginPass"><br />
 <button onClick="sendData();" name="Send">Send Data</Button>
+
+<p id="message">
+
+</p>
 
 <script type="text/javascript">
 function sendData(){
@@ -27,7 +31,7 @@ function sendData(){
 		crossDomain: true,
 		processData: false,
 		success: function(data, status, jqXHR) {
-			alert(data.objects[0].key)
+			$('#message').html(data.objects[0].key)
 		}
 	})
 

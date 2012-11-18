@@ -1,13 +1,12 @@
 from models import User, ApiKeys
 from django.http import Http404
-from django.utils import simplejson
 
 #get for api key for the provided user, or create one if (for some reason) one doesnt exist
-def checkLogin(getRequest):#getRequest is request.GET object
-	name = getRequest.get('user')
-	passw = getRequest.get('passw')
-	print name
-	print passw
+def checkLogin(getRequest, name, passw):#getRequest is request.GET object
+	if getRequest != None:
+		name = getRequest.get('user')
+		passw = getRequest.get('passw')
+
 	#find user, if does not exist in Users table, is not a valid user
 	try:
 		userObj = User.objects.get(username__iexact=name)

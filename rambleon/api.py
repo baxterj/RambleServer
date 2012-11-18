@@ -3,8 +3,8 @@ from tastypie import fields
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
 from rambleon.models import Route, PathPoint, User, ApiKeys
-from auth import checkLogin, validKey
-
+from auth import *
+from postHandlers import *
 
 class MyApiKeyAuthentication(Authentication):
 	def is_authenticated(self, request, **kwargs):
@@ -51,9 +51,25 @@ class ApiKeysResource(ModelResource):
 
 	def dehydrate(self, bundle):
 		bundle.data = {}
-		print 'trying dehydrate'
-		#bundle.data['key'] = checkLogin(bundle.request.POST)
-		#bundle.data['key'] = checkLogin(name='john351', passw='adgsdgdsagsg')
-		#bundle.data['key'] = checkLogin(bundle.request.GET.get('user'), bundle.request.GET.get('passw'))
-		bundle.data['key'] = checkLogin(bundle.request.GET)
+		bundle.data['key'] = checkLogin(getRequest=bundle.request.GET, name=None, passw=None)
+		return bundle
+
+class RegistrationResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'register'
+		authentication = Authentication()
+		authorization = MyLoginAuthorization()
+		list_allowed_methods = ['post',]
+		always_return_data = True
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return handleRegister(bundle)
+
+	def dehydrate(self, bundle):
+		user = bundle.data.get('user')
+		key = checkLogin(getRequest=None, name=user, passw=bundle.data.get('passw'))
+		bundle.data = {}
+		bundle.data['user'] = user
+		bundle.data['key'] = key
 		return bundle
