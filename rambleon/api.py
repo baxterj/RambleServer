@@ -42,17 +42,17 @@ class UserResource(ModelResource):
 class ApiKeysResource(ModelResource):
 	class Meta:
 		queryset = ApiKeys.objects.all()
-		list_allowed_methods = ['get',]
 		resource_name='login'
-		limit = 1
 		authentication = Authentication()
 		authorization = MyLoginAuthorization()
+		list_allowed_methods = ['post',]
 		always_return_data = True
 
+	def obj_create(self, bundle, request=None, **kwargs):
+		return bundle #do nothing, but need to override method anyway..
+
 	def dehydrate(self, bundle):
-		bundle.data = {}
-		bundle.data['key'] = checkLogin(getRequest=bundle.request.GET, name=None, passw=None)
-		return bundle
+		return checkLogin(bundle)
 
 class RegistrationResource(ModelResource):
 	class Meta:
@@ -67,9 +67,4 @@ class RegistrationResource(ModelResource):
 		return handleRegister(bundle)
 
 	def dehydrate(self, bundle):
-		user = bundle.data.get('user')
-		key = checkLogin(getRequest=None, name=user, passw=bundle.data.get('passw'))
-		bundle.data = {}
-		bundle.data['user'] = user
-		bundle.data['key'] = key
-		return bundle
+		return checkLogin(bundle)

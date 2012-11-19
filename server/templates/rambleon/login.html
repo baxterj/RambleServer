@@ -15,23 +15,26 @@ Password: <input type="password" name="pass" id="loginPass"><br />
 
 <script type="text/javascript">
 function sendData(){
-	//var data = JSON.stringify({
-	//	"user": $('#loginUser').val(),
-	//	"passw": $('#loginPass').val(),
-	//});
-	var data = 'user=' + $('#loginUser').val() + '&passw=' + $('#loginPass').val()
+	var data = JSON.stringify({
+		"user": $('#loginUser').val(),
+		"passw": $('#loginPass').val(),
+	});
+	// var data = 'user=' + $('#loginUser').val() + '&passw=' + $('#loginPass').val()
 
 	$.ajax({
-		//url: 'http://localhost:8000/api/v1/login/?format=json',
-		url: 'http://www.rambleonline.com/api/v1/login/?format=json',
-		type: 'GET',
+		//url: 'http://localhost:8000/api/v1/login/',
+		url: 'http://www.rambleonline.com/api/v1/login/',
+		type: 'POST',
 		contentType: 'application/json',
 		data: data,
 		dataType: 'json',
 		crossDomain: true,
 		processData: false,
 		success: function(data, status, jqXHR) {
-			$('#message').html(data.objects[0].key)
+			$('#message').html(data.key)
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			$('#message').html(jQuery.parseJSON(jqXHR.responseText).error_message)
 		}
 	})
 
