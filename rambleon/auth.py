@@ -2,25 +2,27 @@ from models import User, ApiKeys
 from django.http import Http404
 
 #get for api key for the provided user, or create one if (for some reason) one doesnt exist
-def checkLogin(getRequest, name, passw):#getRequest is request.GET object
-	if getRequest != None:
-		name = getRequest.get('user')
-		passw = getRequest.get('passw')
+#package this into 
+def checkLogin(bundle):
+	name = bundle.data.get('user')
+	passw = bundle.data.get('passw')
 
 	#find user, if does not exist in Users table, is not a valid user
 	try:
 		userObj = User.objects.get(username__iexact=name)
 	except Exception:
-		return 'invalid'
+		raise Http404('Invalid Username')
 	if userObj.pwHash == passw:
 		#get api key for user, or create new api key if not had one before
+		bundle.data = {}
+		bundle.data['user'] = userObj.username
 		try:
-			keyObj = ApiKeys.objects.get(user=userObj.pk)
+			bundle.data['key'] = ApiKeys.objects.get(user=userObj.pk).key
 		except ApiKeys.DoesNotExist:
-			keyObj = ApiKeys.objects.create(user=userObj, key=genApiKey(name=name))
-		return keyObj.key
+			bundle.data['key'] = ApiKeys.objects.create(user=userObj, key=genApiKey(name=name)).key
+		return bundle
 	else:
-		return 'invalid'
+		raise Http404('Invalid Password')
 
 
 
