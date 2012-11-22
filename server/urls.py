@@ -14,6 +14,9 @@ v1_api.register(PathPointResource())
 v1_api.register(UserResource())
 v1_api.register(ApiKeysResource())
 v1_api.register(RegistrationResource())
+v1_api.register(MyRoutesResource())
+v1_api.register(FavouriteResource())
+v1_api.register(DoneItResource())
 
 
 urlpatterns = patterns('',
@@ -31,4 +34,5 @@ urlpatterns = patterns('',
 	url(r'^api/', include(v1_api.urls)),
 	url(r'^login/', 'rambleon.views.login'),
 	url(r'^register/', 'rambleon.views.register'),
+	url(r'^test/', 'rambleon.views.test'),
 )

@@ -3,11 +3,11 @@ from django.contrib import admin
 
 class PointInline(admin.TabularInline):
 	model = PathPoint
-	extra = 2
+	extra = 1
 
 class RouteKeywordInline(admin.TabularInline):
 	model = HasKeyword
-	extra = 2
+	extra = 1
 
 class RoutesAdmin(admin.ModelAdmin):
 	inlines = [PointInline, RouteKeywordInline]
@@ -17,11 +17,12 @@ admin.site.register(Route, RoutesAdmin)
 
 class UserFaveInline(admin.TabularInline):
 	model = Favourite
-	extra = 2
+	#model = Route.favourites.through
+	extra = 1
 
 class UserDoneInline(admin.TabularInline):
 	model = DoneIt
-	extra = 2
+	extra = 1
 
 class UserAdmin(admin.ModelAdmin):
 	inlines = [UserFaveInline, UserDoneInline]
@@ -54,3 +55,13 @@ class ApiKeysAdmin(admin.ModelAdmin):
 	list_display = ('user', 'key')
 
 admin.site.register(ApiKeys, ApiKeysAdmin)
+
+class FavouriteAdmin(admin.ModelAdmin):
+	list_display=('user', 'route', 'date')
+
+admin.site.register(Favourite, FavouriteAdmin)
+
+class DoneItAdmin(admin.ModelAdmin):
+	list_display=('user', 'route', 'date')
+
+admin.site.register(DoneIt, DoneItAdmin)
