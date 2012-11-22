@@ -25,14 +25,10 @@ class MyRoutesAuthorization(Authorization):
 			my = object_list.filter(user__username__iexact=request.GET.get('user'))
 			fav = object_list.filter(favourites__username__iexact=request.GET.get('user'))
 			done = object_list.filter(doneIts__username__iexact=request.GET.get('user'))
-			print fav.count()
 			return (my | fav | done).distinct()
 		else:
 			return object_list.none()
 
-    # Optional but recommended
-    #def get_identifier(self, request):
-    #    return request.user.username
 
 class RouteResource(ModelResource):
 	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
@@ -41,6 +37,7 @@ class RouteResource(ModelResource):
 		resource_name ='route'
 		authentication = MyApiKeyAuthentication()
 
+#get a list of routes for the my routes/favourite routes/done routes lists
 class MyRoutesResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	fav = fields.ToManyField('rambleon.api.FavouriteResource', 'favourites', full=True)
@@ -49,8 +46,31 @@ class MyRoutesResource(ModelResource):
 		queryset = Route.objects.all()
 		resource_name ='myroutes'
 		list_allowed_methods = ['get',]
-		#authentication = MyApiKeyAuthentication()
+		authentication = MyApiKeyAuthentication()
 		authorization = MyRoutesAuthorization()
+
+	def dehydrate(self, bundle):
+		if bundle.obj.favourites.all().count() < 1:
+			bundle.data['fav'] = False
+		else:
+			for i in bundle.obj.favourites.all():
+				if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
+					bundle.data['fav'] = True
+					break
+				else:
+					bundle.data['fav'] = False
+
+		if bundle.obj.doneIts.all().count() < 1:
+			bundle.data['done'] = False
+		else:
+			for i in bundle.obj.doneIts.all():
+				if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
+					bundle.data['done'] = True
+					break
+				else:
+					bundle.data['done'] = False
+
+		return bundle
 
 
 class FavouriteResource(ModelResource):
