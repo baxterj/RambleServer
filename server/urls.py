@@ -17,6 +17,7 @@ v1_api.register(RegistrationResource())
 v1_api.register(MyRoutesResource())
 v1_api.register(FavouriteResource())
 v1_api.register(DoneItResource())
+v1_api.register(KeywordResource())
 
 
 urlpatterns = patterns('',

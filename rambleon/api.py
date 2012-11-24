@@ -4,8 +4,8 @@ from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
 from rambleon.models import *
 from auth import *
-from postHandlers import *
-from getHandlers import *
+import postHandlers
+import getHandlers
 
 class MyApiKeyAuthentication(Authentication):
 	def is_authenticated(self, request, **kwargs):
@@ -25,23 +25,51 @@ class MyRoutesAuthorization(Authorization):
 			my = object_list.filter(user__username__iexact=request.GET.get('user'))
 			fav = object_list.filter(favourites__username__iexact=request.GET.get('user'))
 			done = object_list.filter(doneIts__username__iexact=request.GET.get('user'))
+			#remove private routes, favourites owned by user will still show from being 
+			#in the 'my' list
+			fav = fav.filter(private=False)
+			done = done.filter(private=False)
+
 			return (my | fav | done).distinct()
+
+		else:
+			return object_list.none()
+
+class MySingleRouteAuthorization(Authorization):
+	def is_authorized(self, request, object=None):
+		return True
+
+	def apply_limits(self, request, object_list):
+		if request:
+			my = object_list.filter(user__username__iexact=request.GET.get('user'))
+			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
+			others = others.filter(private=False)
+			return (my | others).distinct()
 		else:
 			return object_list.none()
 
 
 class RouteResource(ModelResource):
 	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
 	class Meta:
 		queryset = Route.objects.all()
 		resource_name ='route'
 		authentication = MyApiKeyAuthentication()
+		authorization = MySingleRouteAuthorization()
+
+	def dehydrate(self, bundle):
+		return getHandlers.dehydrateSingleRoute(bundle=bundle)
+
 
 #get a list of routes for the my routes/favourite routes/done routes lists
+#does not include pathpoints
 class MyRoutesResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	fav = fields.ToManyField('rambleon.api.FavouriteResource', 'favourites', full=True)
 	done = fields.ToManyField('rambleon.api.DoneItResource', 'doneIts', full=True)
+	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
 	class Meta:
 		queryset = Route.objects.all()
 		resource_name ='myroutes'
@@ -50,28 +78,14 @@ class MyRoutesResource(ModelResource):
 		authorization = MyRoutesAuthorization()
 
 	def dehydrate(self, bundle):
-		if bundle.obj.favourites.all().count() < 1:
-			bundle.data['fav'] = False
-		else:
-			for i in bundle.obj.favourites.all():
-				if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
-					bundle.data['fav'] = True
-					break
-				else:
-					bundle.data['fav'] = False
+		return getHandlers.dehydrateRoutesList(bundle=bundle)
 
-		if bundle.obj.doneIts.all().count() < 1:
-			bundle.data['done'] = False
-		else:
-			for i in bundle.obj.doneIts.all():
-				if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
-					bundle.data['done'] = True
-					break
-				else:
-					bundle.data['done'] = False
 
-		return bundle
-
+class KeywordResource(ModelResource):
+	class Meta:
+		queryset = Keyword.objects.all()
+		resource_name = 'keyword'
+		authentication = MyApiKeyAuthentication()
 
 class FavouriteResource(ModelResource):
 	class Meta:
@@ -94,6 +108,14 @@ class PathPointResource(ModelResource):
 		queryset = PathPoint.objects.all()
 		resource_name = 'pathpoint'
 		authentication = MyApiKeyAuthentication()
+
+	def dehydrate(self, bundle):
+		bundle.data = {
+			'lat': bundle.data.get('lat'),
+			'lng': bundle.data.get('lng'),
+			'orderNum': bundle.data.get('orderNum')
+		}
+		return bundle
 
 class UserResource(ModelResource):
 	class Meta:
@@ -132,7 +154,7 @@ class RegistrationResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
-		return handleRegister(bundle)
+		return postHandlers.handleRegister(bundle)
 
 	def dehydrate(self, bundle):
 		return checkLogin(bundle)
