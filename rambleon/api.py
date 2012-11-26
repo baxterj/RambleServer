@@ -6,6 +6,10 @@ from rambleon.models import *
 from auth import *
 import postHandlers
 import getHandlers
+from string import *
+from decimal import *
+import geography
+
 
 class MyApiKeyAuthentication(Authentication):
 	def is_authenticated(self, request, **kwargs):
@@ -35,7 +39,7 @@ class MyRoutesAuthorization(Authorization):
 		else:
 			return object_list.none()
 
-class MySingleRouteAuthorization(Authorization):
+class MyRouteAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True
 
@@ -43,8 +47,15 @@ class MySingleRouteAuthorization(Authorization):
 		if request:
 			my = object_list.filter(user__username__iexact=request.GET.get('user'))
 			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
-			others = others.filter(private=False)
-			return (my | others).distinct()
+			others = others.filter(private=False) #remove private routes from list of others' routes
+
+			routes = (my | others).distinct()
+			if request.GET.get('bounds') == None:
+				return routes
+			else:
+				coords = geography.getCoordsFromBounds(request.GET.get('bounds'))
+				return geography.withinBounds(routes, coords)
+
 		else:
 			return object_list.none()
 
@@ -57,10 +68,12 @@ class RouteResource(ModelResource):
 		queryset = Route.objects.all()
 		resource_name ='route'
 		authentication = MyApiKeyAuthentication()
-		authorization = MySingleRouteAuthorization()
+		authorization = MyRouteAuthorization()
+		max_limit=50
 
 	def dehydrate(self, bundle):
 		return getHandlers.dehydrateSingleRoute(bundle=bundle)
+
 
 
 #get a list of routes for the my routes/favourite routes/done routes lists
