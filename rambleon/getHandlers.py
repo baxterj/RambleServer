@@ -1,6 +1,8 @@
 from django.http import Http404
 from datetime import datetime as dt
 from models import *
+import geography
+import string
 
 def dehydrateRoutesList(bundle):
 	if bundle.obj.favourites.all().count() < 1:
@@ -51,3 +53,17 @@ def dehydrateSingleRoute(bundle):
 	bundle.data.pop('resource_uri')
 
 	return bundle
+
+
+def routesWithinBounds(routes, boundsString):
+	return geography.withinBounds(routes, geography.getCoordsFromBounds(boundsString))
+
+
+def filterRouteKeywords(routes, keywordString):
+	keywords = string.split(keywordString, ',')
+	for k in keywords:
+		k=k.lower()
+	routes = routes.filter(keywords__keyword__in=keywords)
+
+	return routes
+

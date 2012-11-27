@@ -8,7 +8,7 @@ import postHandlers
 import getHandlers
 from string import *
 from decimal import *
-import geography
+
 
 
 class MyApiKeyAuthentication(Authentication):
@@ -39,6 +39,7 @@ class MyRoutesAuthorization(Authorization):
 		else:
 			return object_list.none()
 
+#includes search
 class MyRouteAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True
@@ -50,16 +51,19 @@ class MyRouteAuthorization(Authorization):
 			others = others.filter(private=False) #remove private routes from list of others' routes
 
 			routes = (my | others).distinct()
-			if request.GET.get('bounds') == None:
-				return routes
-			else:
-				coords = geography.getCoordsFromBounds(request.GET.get('bounds'))
-				return geography.withinBounds(routes, coords)
+
+			if request.GET.get('filterwords') != None:
+				routes = getHandlers.filterRouteKeywords(routes, request.GET.get('filterwords'))
+
+			if request.GET.get('bounds') != None:
+				routes = getHandlers.routesWithinBounds(routes, request.GET.get('bounds'))
+
+			return routes
 
 		else:
 			return object_list.none()
 
-
+#includes search
 class RouteResource(ModelResource):
 	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
@@ -70,11 +74,13 @@ class RouteResource(ModelResource):
 		authentication = MyApiKeyAuthentication()
 		authorization = MyRouteAuthorization()
 		max_limit=50
+		list_allowed_methods = ['get', 'post',]
 
 	def dehydrate(self, bundle):
 		return getHandlers.dehydrateSingleRoute(bundle=bundle)
 
-
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.handleNewRoute(bundle)
 
 #get a list of routes for the my routes/favourite routes/done routes lists
 #does not include pathpoints
