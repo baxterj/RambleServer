@@ -177,3 +177,43 @@ class RegistrationResource(ModelResource):
 
 	def dehydrate(self, bundle):
 		return checkLogin(bundle)
+
+
+
+class MyNoteImageAuthorization(Authorization):
+	def is_authorized(self, request, object=None):
+		return True
+
+	def apply_limits(self, request, object_list):
+		if request:
+			my = object_list.filter(user__username__iexact=request.GET.get('user'))
+			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
+			others = others.filter(private=False) #remove private routes from list of others' routes
+
+			notes = (my | others).distinct()
+
+			#implement this for note searching
+			# if request.GET.get('filterwords') != None:
+			# 	routes = getHandlers.filterRouteKeywords(routes, request.GET.get('filterwords'))
+
+			if request.GET.get('bounds') != None:
+				notes = getHandlers.notesWithinBounds(notes, request.GET.get('bounds'))
+
+			return notes
+
+		else:
+			return object_list.none()
+
+class NoteResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Note.objects.all()
+		resource_name='note'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyNoteImageAuthorization()
+		list_allowed_methods=['get',]
+		max_limit=50
+
+	# def dehydrate(self, bundle):
+	# 	return bundle
+

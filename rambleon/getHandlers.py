@@ -56,8 +56,10 @@ def dehydrateSingleRoute(bundle):
 
 
 def routesWithinBounds(routes, boundsString):
-	return geography.withinBounds(routes, geography.getCoordsFromBounds(boundsString))
+	return geography.routesWithinBounds(routes, geography.getCoordsFromBounds(boundsString))
 
+def notesWithinBounds(notes, boundsString):
+	return geography.notesWithinBounds(notes, geography.getCoordsFromBounds(boundsString))
 
 def filterRouteKeywords(routes, keywordString):
 	keywords = string.split(keywordString, ',')

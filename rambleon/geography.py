@@ -5,8 +5,7 @@ from string import *
 from decimal import *
 
 #coords is a dict of lat and lng making up a bounding rectangle, swLat, swLng, neLat, neLng
-def withinBounds(routes, coords):
-	print coords
+def routesWithinBounds(routes, coords):
 	for r in routes:
 		try:
 			lat = r.pathpoints.get(orderNum=0).lat
@@ -23,6 +22,22 @@ def withinBounds(routes, coords):
 		except Exception:
 			routes = routes.exclude(pk=r.pk)
 	return routes
+
+def notesWithinBounds(notes, coords):
+	for n in notes:
+		try:
+			if n.lat < coords['swLat']: #if below bottom edge
+				raise Exception
+			if n.lat > coords['neLat']: #if above top edge
+				raise Exception
+			if n.lng < coords['swLng']: #if left of left edge
+				raise Exception
+			if n.lng > coords['neLng']: #if right of right edge
+				raise Exception
+		except Exception:
+			notes = notes.exclude(pk=n.pk)
+	return notes
+
 
 def getCoordsFromBounds(boundsString):
 	coords = split(boundsString, ',')
