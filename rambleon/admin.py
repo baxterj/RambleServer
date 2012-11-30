@@ -37,7 +37,7 @@ class KeywordAdmin(admin.ModelAdmin):
 admin.site.register(Keyword, KeywordAdmin)
 
 class NoteAdmin(admin.ModelAdmin):
-	list_display = ('user', 'lat', 'lng', 'private', 'content')
+	list_display = ('user', 'lat', 'lng', 'private', 'title')
 
 admin.site.register(Note, NoteAdmin)
 

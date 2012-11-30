@@ -22,4 +22,4 @@ def register(request):
 	return render_to_response('rambleon/register.html')
 
 def test(request):
-	return render_to_response('rambleon/testCreateRoute.html')
+	return render_to_response('rambleon/testUpdateRoute.html')

@@ -75,12 +75,16 @@ class RouteResource(ModelResource):
 		authorization = MyRouteAuthorization()
 		max_limit=50
 		list_allowed_methods = ['get', 'post',]
+		always_return_data = True
 
 	def dehydrate(self, bundle):
 		return getHandlers.dehydrateSingleRoute(bundle=bundle)
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewRoute(bundle)
+
+	def obj_update(self, bundle, request=None, **kwargs):
+		return putHandlers.updateRoute(bundle)
 
 #get a list of routes for the my routes/favourite routes/done routes lists
 #does not include pathpoints
@@ -211,9 +215,23 @@ class NoteResource(ModelResource):
 		resource_name='note'
 		authentication = MyApiKeyAuthentication()
 		authorization = MyNoteImageAuthorization()
-		list_allowed_methods=['get',]
+		list_allowed_methods=['get','post',]
 		max_limit=50
+		always_return_data = True
 
-	# def dehydrate(self, bundle):
-	# 	return bundle
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.handleNewNote(bundle)
 
+class ImageResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Image.objects.all()
+		resource_name='image'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyNoteImageAuthorization()
+		list_allowed_methods=['get','post',]
+		max_limit=50
+		always_return_data = True
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.handleNewImage(bundle)

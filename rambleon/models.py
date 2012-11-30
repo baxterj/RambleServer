@@ -58,6 +58,7 @@ class HasKeyword(models.Model):
 
 class Note(models.Model):
 	user = models.ForeignKey(User)
+	title = models.CharField(max_length=60)
 	content = models.TextField()
 	creationDate = models.DateTimeField(auto_now_add=True)
 	updateDate = models.DateTimeField(auto_now=True)
@@ -70,6 +71,7 @@ class Note(models.Model):
 
 class Image(models.Model):
 	user = models.ForeignKey(User)
+	title = models.CharField(max_length=60)
 	image = models.TextField(blank=True)
 	thumbnail = models.TextField(blank=True)
 	text = models.TextField()

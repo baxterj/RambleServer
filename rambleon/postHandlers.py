@@ -51,9 +51,38 @@ def handleNewRoute(bundle):
 			HasKeyword.objects.create(keyword=newWord, route=newRoute)
 	i = 0
 	for p in pathpoints:
-		print p
 		PathPoint.objects.create(route=newRoute, orderNum=i, lat=Decimal(p['lat']), lng=Decimal(p['lng']))
 		i += 1
 
+	bundle.obj = newRoute
+	return bundle
 
+def handleNewNote(bundle):
+	title = bundle.data.get('title')
+	private = bundle.data.get('private') == True
+	lat = bundle.data.get('lat')
+	lng = bundle.data.get('lng')
+	content = bundle.data.get('content')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+
+	newNote = Note(title=title, user=user, lat=lat, lng=lng, private=private, content=content)
+	newNote.save()
+
+	bundle.obj = newNote
+	return bundle
+
+def handleNewImage(bundle):
+	title = bundle.data.get('title')
+	private = bundle.data.get('private') == True
+	lat = bundle.data.get('lat')
+	lng = bundle.data.get('lng')
+	text = bundle.data.get('text')
+	image = bundle.data.get('image')
+	thumbnail = bundle.data.get('thumbnail')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+
+	newImage = Image(user=user, title=title, private=private, lat=lat, lng=lng, text=text, image=image, thumbnail=thumbnail)
+	newImage.save()
+
+	bundle.obj = newImage
 	return bundle
