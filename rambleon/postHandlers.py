@@ -36,6 +36,49 @@ def handleNewRoute(bundle):
 	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
 	newRoute = Route(user=user, name=name, private=private, mapThumbnail=mapThumbnail)
 	newRoute.save()
+
+	addKeywords(keywords=keywords, route=newRoute)
+	addPathPoints(pathpoints=pathpoints, route=newRoute)
+
+	bundle.obj = newRoute
+	return bundle
+
+
+def updateRoute(bundle):
+	routeID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		route = Route.objects.get(pk=routeID)
+	except Exception:
+		raise Http404('Invalid Route')
+
+	if route.user == user:
+		if bundle.data.get('private') != None:
+			route.private = bundle.data.get('private') == True
+
+		if bundle.data.get('name') != None:
+			route.name = bundle.data.get('name')
+
+		if bundle.data.get('mapThumbnail') != None:
+			route.mapThumbnail = bundle.data.get('mapThumbnail')
+
+		if bundle.data.get('pathpoints') != None:
+			PathPoint.objects.filter(route=route).delete()
+			addPathPoints(pathpoints=bundle.data.get('pathpoints'), route=route)
+
+		if bundle.data.get('keywords') != None:
+			HasKeyword.objects.filter(route=route).delete()
+			addKeywords(keywords=bundle.data.get('keywords'), route=route)
+
+	else:
+		raise Http404('You do not own this route')
+
+	route.save()
+	bundle.obj=route
+	return bundle
+
+
+def addKeywords(keywords, route):
 	for k in keywords:
 		k=k.lower()
 		try:
@@ -44,18 +87,18 @@ def handleNewRoute(bundle):
 			stored = None
 		if stored != None:
 			#use existing keyword
-			HasKeyword.objects.create(keyword=stored, route=newRoute)
+			HasKeyword.objects.create(keyword=stored, route=route)
 		else:
 			#make new keyword
 			newWord = Keyword.objects.create(keyword=k)
-			HasKeyword.objects.create(keyword=newWord, route=newRoute)
+			HasKeyword.objects.create(keyword=newWord, route=route)
+
+def addPathPoints(pathpoints, route):
 	i = 0
 	for p in pathpoints:
-		PathPoint.objects.create(route=newRoute, orderNum=i, lat=Decimal(p['lat']), lng=Decimal(p['lng']))
+		PathPoint.objects.create(route=route, orderNum=i, lat=Decimal(p['lat']), lng=Decimal(p['lng']))
 		i += 1
 
-	bundle.obj = newRoute
-	return bundle
 
 def handleNewNote(bundle):
 	title = bundle.data.get('title')
@@ -69,6 +112,38 @@ def handleNewNote(bundle):
 	newNote.save()
 
 	bundle.obj = newNote
+	return bundle
+
+def updateNote(bundle):
+	noteID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		note = Note.objects.get(pk=noteID)
+	except Exception:
+		raise Http404('Invalid Note')
+
+	if note.user == user:
+		if bundle.data.get('title') != None:
+			note.title = bundle.data.get('title')
+		
+		if bundle.data.get('private') != None:
+			note.private = bundle.data.get('private') == True
+
+		if bundle.data.get('lat') != None:
+			note.lat = bundle.data.get('lat')
+
+		if bundle.data.get('lng') != None:
+			note.lng = bundle.data.get('lng')
+
+		if bundle.data.get('content') != None:
+			note.lng = bundle.data.get('content')
+
+	else:
+		raise Http404('You do not own this note')
+
+
+	note.save()
+	bundle.obj = note
 	return bundle
 
 def handleNewImage(bundle):
@@ -85,4 +160,43 @@ def handleNewImage(bundle):
 	newImage.save()
 
 	bundle.obj = newImage
+	return bundle
+
+def updateImage(bundle):
+	imageID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		image = Image.objects.get(pk=imageID)
+	except Exception:
+		raise Http404('Invalid Image')
+
+	if image.user == user:
+		if bundle.data.get('title') != None:
+			image.title = bundle.data.get('title')
+
+		if bundle.data.get('image') != None:
+			image.image = bundle.data.get('image')
+
+		if bundle.data.get('thumbnail') != None:
+			image.thumbnail = bundle.data.get('thumbnail')
+
+		if bundle.data.get('text') != None:
+			image.text = bundle.data.get('text')
+		
+		if bundle.data.get('private') != None:
+			image.private = bundle.data.get('private') == True
+
+		if bundle.data.get('lat') != None:
+			image.lat = bundle.data.get('lat')
+
+		if bundle.data.get('lng') != None:
+			image.lng = bundle.data.get('lng')
+
+
+	else:
+		raise Http404('You do not own this image')
+
+
+	image.save()
+	bundle.obj = image
 	return bundle

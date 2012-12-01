@@ -33,9 +33,7 @@ class MyRoutesAuthorization(Authorization):
 			#in the 'my' list
 			fav = fav.filter(private=False)
 			done = done.filter(private=False)
-
 			return (my | fav | done).distinct()
-
 		else:
 			return object_list.none()
 
@@ -49,17 +47,22 @@ class MyRouteAuthorization(Authorization):
 			my = object_list.filter(user__username__iexact=request.GET.get('user'))
 			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
 			others = others.filter(private=False) #remove private routes from list of others' routes
-
 			routes = (my | others).distinct()
-
 			if request.GET.get('filterwords') != None:
 				routes = getHandlers.filterRouteKeywords(routes, request.GET.get('filterwords'))
-
 			if request.GET.get('bounds') != None:
 				routes = getHandlers.routesWithinBounds(routes, request.GET.get('bounds'))
-
 			return routes
+		else:
+			return object_list.none()
 
+class MyUpdateAuthorization(Authorization):
+	def is_authorized(self, request, object=None):
+		return True
+
+	def apply_limits(self, request, object_list):
+		if request:
+			return object_list.filter(user__username__iexact=request.GET.get('user'))
 		else:
 			return object_list.none()
 
@@ -83,9 +86,6 @@ class RouteResource(ModelResource):
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewRoute(bundle)
 
-	def obj_update(self, bundle, request=None, **kwargs):
-		return putHandlers.updateRoute(bundle)
-
 #get a list of routes for the my routes/favourite routes/done routes lists
 #does not include pathpoints
 class MyRoutesResource(ModelResource):
@@ -103,6 +103,18 @@ class MyRoutesResource(ModelResource):
 	def dehydrate(self, bundle):
 		return getHandlers.dehydrateRoutesList(bundle=bundle)
 
+class UpdateRouteResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
+	class Meta:
+		queryset = Route.objects.all()
+		resource_name='updateroute'
+		list_allowed_methods=['post',]
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.updateRoute(bundle)
 
 class KeywordResource(ModelResource):
 	class Meta:
@@ -123,7 +135,6 @@ class DoneItResource(ModelResource):
 		resource_name = 'doneit'
 		excludes = ['date',]
 		authentication = MyApiKeyAuthentication()
-
 
 class PathPointResource(ModelResource):
 	route = fields.ToOneField('rambleon.api.RouteResource', 'route')
@@ -182,8 +193,6 @@ class RegistrationResource(ModelResource):
 	def dehydrate(self, bundle):
 		return checkLogin(bundle)
 
-
-
 class MyNoteImageAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True
@@ -193,20 +202,16 @@ class MyNoteImageAuthorization(Authorization):
 			my = object_list.filter(user__username__iexact=request.GET.get('user'))
 			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
 			others = others.filter(private=False) #remove private routes from list of others' routes
-
 			notes = (my | others).distinct()
-
 			#implement this for note searching
 			# if request.GET.get('filterwords') != None:
 			# 	routes = getHandlers.filterRouteKeywords(routes, request.GET.get('filterwords'))
-
 			if request.GET.get('bounds') != None:
 				notes = getHandlers.notesWithinBounds(notes, request.GET.get('bounds'))
-
 			return notes
-
 		else:
 			return object_list.none()
+
 
 class NoteResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
@@ -222,6 +227,18 @@ class NoteResource(ModelResource):
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewNote(bundle)
 
+class UpdateNoteResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Note.objects.all()
+		resource_name='updatenote'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.updateNote(bundle)
+
 class ImageResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	class Meta:
@@ -235,3 +252,15 @@ class ImageResource(ModelResource):
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewImage(bundle)
+
+class UpdateImageResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Image.objects.all()
+		resource_name='updateimage'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.updateImage(bundle)

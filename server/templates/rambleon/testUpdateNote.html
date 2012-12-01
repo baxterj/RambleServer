@@ -1,6 +1,6 @@
 {% extends 'rambleon/base.html' %}
 
-{% block title %} Ramble Online - update test route{% endblock %}
+{% block title %} Ramble Online - update test note{% endblock %}
 
 {% block content %}
 
@@ -9,11 +9,11 @@ function sendData(){
 	var data = JSON.stringify({
 		//"name": 'this is a POSTed route WITH UPDATED TITLE VIA PUT'
 		"id": $('#loginUser').val(),
-		"keywords": ['smelly', 'cheese']
+		"title": 'well this is a fun note'
 	});
 
 	$.ajax({
-		url: 'http://localhost:8000/api/v1/updateroute/?format=json&user=james&apikey=thisisthekeyforjames',
+		url: 'http://localhost:8000/api/v1/updatenote/?format=json&user=james&apikey=thisisthekeyforjames',
 		//url: 'http://www.rambleonline.com/api/v1/myroutes/',
 		type: 'POST',
 		contentType: 'application/json',
@@ -45,7 +45,7 @@ function sendData(){
 
 </script>
 
-Route ID: <input type="text" name="user" id="loginUser"><br />
+Note ID: <input type="text" name="user" id="loginUser"><br />
 <!--Email: <input type="email" name="email" id="loginEmail"><br />
 Password: <input type="password" name="password" id="loginPass">-->
 <button onClick="sendData();" name="Send">Send Data</Button>
