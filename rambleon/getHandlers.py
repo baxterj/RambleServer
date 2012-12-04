@@ -68,4 +68,3 @@ def filterRouteKeywords(routes, keywordString):
 	routes = routes.filter(keywords__keyword__in=keywords)
 
 	return routes
-

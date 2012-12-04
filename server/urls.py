@@ -23,6 +23,14 @@ v1_api.register(ImageResource())
 v1_api.register(UpdateRouteResource())
 v1_api.register(UpdateNoteResource())
 v1_api.register(UpdateImageResource())
+v1_api.register(DeleteRouteResource())
+v1_api.register(DeleteNoteResource())
+v1_api.register(DeleteImageResource())
+v1_api.register(AccountResource())
+v1_api.register(DeleteAccountResource())
+v1_api.register(UpdateAccountResource())
+
+
 
 
 

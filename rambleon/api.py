@@ -20,6 +20,16 @@ class MyLoginAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True
 
+class MyUserAuthorization(Authorization):
+	def is_authorized(self, request, object=None):
+		return True
+
+	def apply_limits(self, request, object_list):
+		if request:
+			return object_list.filter(username__iexact=request.GET.get('user'))
+		else:
+			return object_list.none()
+
 class MyRoutesAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True
@@ -116,6 +126,18 @@ class UpdateRouteResource(ModelResource):
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.updateRoute(bundle)
 
+class DeleteRouteResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Route.objects.all()
+		resource_name='deleteroute'
+		list_allowed_methods=['post',]
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.deleteRoute(bundle)
+
 class KeywordResource(ModelResource):
 	class Meta:
 		queryset = Keyword.objects.all()
@@ -160,8 +182,44 @@ class UserResource(ModelResource):
 
 	def dehydrate(self, bundle):
 		#removes the resource_uri field
-		bundle.data = {'username': bundle.data.get('username'),}
+		bundle.data.pop('resource_uri') 
 		return bundle
+
+class AccountResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'account'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUserAuthorization()
+		fields = ['username', 'email', 'regDate',]
+		list_allowed_methods = ['get',]
+
+	def dehydrate(self, bundle):
+		bundle.data.pop('resource_uri') 
+		return bundle
+
+class UpdateAccountResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'updateaccount'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUserAuthorization()
+		list_allowed_methods = ['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.updateAccount(bundle)
+
+class DeleteAccountResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'deleteaccount'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUserAuthorization()
+		fields = ['username',]
+		list_allowed_methods = ['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.deleteAccount(bundle)
 
 class ApiKeysResource(ModelResource):
 	class Meta:
@@ -239,6 +297,18 @@ class UpdateNoteResource(ModelResource):
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.updateNote(bundle)
 
+class DeleteNoteResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Note.objects.all()
+		resource_name='deletenote'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.deleteNote(bundle)
+
 class ImageResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	class Meta:
@@ -264,3 +334,15 @@ class UpdateImageResource(ModelResource):
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.updateImage(bundle)
+
+class DeleteImageResource(ModelResource):
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = Note.objects.all()
+		resource_name='deleteimage'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.deleteImage(bundle)

@@ -77,6 +77,20 @@ def updateRoute(bundle):
 	bundle.obj=route
 	return bundle
 
+def deleteRoute(bundle):
+	routeID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		route = Route.objects.get(pk=routeID)
+	except Exception:
+		raise Http404('Invalid Route')
+
+	if route.user == user:
+		route.delete()
+	else:
+		raise Http404('You do not own this Route')
+
+	return bundle
 
 def addKeywords(keywords, route):
 	for k in keywords:
@@ -146,6 +160,22 @@ def updateNote(bundle):
 	bundle.obj = note
 	return bundle
 
+def deleteNote(bundle):
+	noteID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		note = Note.objects.get(pk=noteID)
+	except Exception:
+		raise Http404('Invalid Note')
+
+	if note.user == user:
+		note.delete()
+	else:
+		raise Http404('You do not own this Note')
+
+
+	return bundle
+
 def handleNewImage(bundle):
 	title = bundle.data.get('title')
 	private = bundle.data.get('private') == True
@@ -199,4 +229,45 @@ def updateImage(bundle):
 
 	image.save()
 	bundle.obj = image
+	return bundle
+
+
+def deleteImage(bundle):
+	imageID = bundle.data.get('id')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		image = Image.objects.get(pk=imageID)
+	except Exception:
+		raise Http404('Invalid Image')
+
+	if image.user == user:
+		image.delete()
+	else:
+		raise Http404('You do not own this Image')
+
+	return bundle
+
+def deleteAccount(bundle):
+	passw = bundle.data.get('passw')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	if user.pwHash == passw:
+		user.delete()
+	else:
+		raise Http404('Invalid Username or Password')
+
+	return bundle
+
+def updateAccount(bundle):
+	passw = bundle.data.get('passw')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	if user.pwHash == passw:
+		if bundle.data.get('email') != None:
+			user.email = bundle.data.get('email')
+		if bundle.data.get('newpassw') != None:
+			user.pwHash = bundle.data.get('newpassw')
+	else:
+		raise Http404('Invalid Username or Password')
+
+	user.save()
+	bundle.obj = user
 	return bundle
