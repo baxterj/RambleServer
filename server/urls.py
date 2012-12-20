@@ -29,8 +29,8 @@ v1_api.register(DeleteImageResource())
 v1_api.register(AccountResource())
 v1_api.register(DeleteAccountResource())
 v1_api.register(UpdateAccountResource())
-
-
+v1_api.register(UpdateFavouriteResource())
+v1_api.register(UpdateDoneItResource())
 
 
 
