@@ -76,6 +76,7 @@ class MyUpdateAuthorization(Authorization):
 		else:
 			return object_list.none()
 
+
 #includes search
 class RouteResource(ModelResource):
 	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
@@ -346,3 +347,27 @@ class DeleteImageResource(ModelResource):
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.deleteImage(bundle)
+
+class UpdateDoneItResource(ModelResource):
+	user = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = DoneIt.objects.all()
+		resource_name = 'done'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.doneIt(bundle)
+
+class UpdateFavouriteResource(ModelResource):
+	user = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	class Meta:
+		queryset = DoneIt.objects.all()
+		resource_name = 'fav'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods=['post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.favourite(bundle)

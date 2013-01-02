@@ -271,3 +271,47 @@ def updateAccount(bundle):
 	user.save()
 	bundle.obj = user
 	return bundle
+
+def doneIt(bundle):
+	routeID = bundle.data.get('route')
+	boolean = bundle.data.get('set')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		route = Route.objects.get(pk=routeID)
+	except Exception:
+		raise Http404('Invalid Route')
+
+	try:
+		existing = DoneIt.objects.all().filter(user=user).get(route=route)
+		if boolean == False:
+			existing.delete()
+	except Exception:
+		if boolean == True:
+			newDoneIt = DoneIt(user=user, route=route, date=dt.now())
+			newDoneIt.save()
+		else:
+			raise Http404('DoneIt record does not exist')
+
+	return bundle
+
+def favourite(bundle):
+	routeID = bundle.data.get('route')
+	boolean = bundle.data.get('set')
+	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	try:
+		route = Route.objects.get(pk=routeID)
+	except Exception:
+		raise Http404('Invalid Route')
+
+	try:
+		existing = Favourite.objects.all().filter(user=user).get(route=route)
+		if not boolean:
+			existing.delete()
+	except Exception:
+		if boolean:
+			newFav = Favourite(user=user, route=route, date=dt.now())
+			newFav.save()
+		else:
+			raise Http404('Favourite record does not exist')
+
+	return bundle
