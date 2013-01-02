@@ -286,6 +286,9 @@ class NoteResource(ModelResource):
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewNote(bundle)
 
+	def dehydrate(self, bundle):
+		return getHandlers.dehydrateNote(bundle)
+
 class UpdateNoteResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	class Meta:
@@ -323,6 +326,9 @@ class ImageResource(ModelResource):
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewImage(bundle)
+
+	def dehydrate(self, bundle):
+		return getHandlers.dehydrateImage(bundle)
 
 class UpdateImageResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)

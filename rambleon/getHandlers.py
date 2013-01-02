@@ -81,6 +81,16 @@ def dehydrateSingleRoute(bundle):
 
 	return bundle
 
+def dehydrateImage(bundle):
+	bundle.data['creationDate'] = bundle.data['creationDate'].strftime('%d %b %Y')
+	bundle.data['updateDate'] = bundle.data['updateDate'].strftime('%d %b %Y')
+	return bundle
+
+def dehydrateNote(bundle):
+	bundle.data['creationDate'] = bundle.data['creationDate'].strftime('%d %b %Y')
+	bundle.data['updateDate'] = bundle.data['updateDate'].strftime('%d %b %Y')
+	return bundle
+
 
 def routesWithinBounds(routes, boundsString):
 	return geography.routesWithinBounds(routes, geography.getCoordsFromBounds(boundsString))
