@@ -42,7 +42,7 @@ class NoteAdmin(admin.ModelAdmin):
 admin.site.register(Note, NoteAdmin)
 
 class ImageAdmin(admin.ModelAdmin):
-	list_display = ('user', 'lat', 'lng', 'private', 'text', 'image', 'thumbnail')
+	list_display = ('user', 'title', 'private', 'text')
 
 admin.site.register(Image, ImageAdmin)
 
