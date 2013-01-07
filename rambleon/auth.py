@@ -7,8 +7,8 @@ import hashlib
 #package this into 
 def checkLogin(bundle):
 	name = bundle.data.get('user')
-	passw = encryptPass(bundle.data.get('passw'), name)
-	
+	passw = bundle.data.get('passw')
+
 
 	#find user, if does not exist in Users table, is not a valid user
 	try:
