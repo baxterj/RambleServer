@@ -1,5 +1,7 @@
 from models import User, ApiKeys
 from django.http import Http404
+import random
+import hashlib
 
 #get for api key for the provided user, or create one if (for some reason) one doesnt exist
 #package this into 
@@ -12,7 +14,7 @@ def checkLogin(bundle):
 		userObj = User.objects.get(username__iexact=name)
 	except Exception:
 		raise Http404('Invalid Username')
-	if userObj.pwHash == passw:
+	if userObj.pwHash == encryptPass(passw, name):
 		#get api key for user, or create new api key if not had one before
 		bundle.data = {}
 		bundle.data['user'] = userObj.username
@@ -25,9 +27,18 @@ def checkLogin(bundle):
 		raise Http404('Invalid Password')
 
 
+def encryptPass(passw, username):
+	h = hashlib.sha1()
+	h.update('adgi43g3g' + passw + '4352fmv' + username)
+	return str(h.hexdigest())
+
 
 def genApiKey(name):
-	return 'thisisthekeyfor' + name
+	random.seed()
+	bits = str(random.getrandbits(24))
+	h = hashlib.sha1()
+	h.update('apikey' + name + 'bits')
+	return str(h.hexdigest())
 
 
 def validKey(name, key):
