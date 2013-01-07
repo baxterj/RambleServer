@@ -15,11 +15,11 @@ def route(request, route_id):
 	return render_to_response('rambleon/route.html', {'route': route})#, 'points': route.pathpoint_set().all()})
 	#return render_to_response('rambleon/route.html')
 
-def login(request):
-	return render_to_response('rambleon/login.html')
+# def login(request):
+# 	return render_to_response('rambleon/login.html')
 
-def register(request):
-	return render_to_response('rambleon/register.html')
+# def register(request):
+# 	return render_to_response('rambleon/register.html')
 
-def test(request):
-	return render_to_response('rambleon/testFavourite.html')
+# def test(request):
+# 	return render_to_response('rambleon/testFavourite.html')
