@@ -79,7 +79,11 @@ class MyUpdateAuthorization(Authorization):
 
 #includes search
 class RouteResource(ModelResource):
-	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
+	#pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
+	# pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True,
+	# 	attribute=lambda bundle: bundle.obj.pathpoints.all().order_by('orderNum'))
+	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', full=True,
+		attribute=lambda bundle: bundle.obj.pathpoints.all().order_by('orderNum'))
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
 	class Meta:
@@ -87,7 +91,7 @@ class RouteResource(ModelResource):
 		resource_name ='route'
 		authentication = MyApiKeyAuthentication()
 		authorization = MyRouteAuthorization()
-		max_limit=50
+		max_limit=30
 		list_allowed_methods = ['get', 'post',]
 		always_return_data = True
 
@@ -280,7 +284,7 @@ class NoteResource(ModelResource):
 		authentication = MyApiKeyAuthentication()
 		authorization = MyNoteImageAuthorization()
 		list_allowed_methods=['get','post',]
-		max_limit=50
+		max_limit=30
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
@@ -321,7 +325,7 @@ class ImageResource(ModelResource):
 		authentication = MyApiKeyAuthentication()
 		authorization = MyNoteImageAuthorization()
 		list_allowed_methods=['get','post',]
-		max_limit=50
+		max_limit=30
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
