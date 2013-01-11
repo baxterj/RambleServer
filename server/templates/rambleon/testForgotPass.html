@@ -1,0 +1,59 @@
+{% extends 'rambleon/base.html' %}
+
+{% block title %} Ramble Online - test forgot password{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+function sendData(){
+	var data = JSON.stringify({
+		//"name": 'this is a POSTed route WITH UPDATED TITLE VIA PUT'
+		"user": $('#loginUser').val()
+	});
+
+	$.ajax({
+		url: 'http://localhost:8000/api/v1/forgotpassword/?format=json',
+		//url: 'http://www.rambleonline.com/api/v1/myroutes/',
+		type: 'POST',
+		contentType: 'application/json',
+		data: data,
+		dataType: 'json',
+		crossDomain: true,
+		processData: false,
+		success: function(data, status, jqXHR) {
+			try{
+				$('#message').html(data.key)
+			}catch(e){
+				$('#message').html('success')
+			}
+			
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			try{
+				$('#message').html(jQuery.parseJSON(jqXHR.responseText).error_message)
+			}catch(e){
+				$('#message').html('something went wrong, probably unauthorized')
+			}
+		}
+	})
+
+}
+
+
+
+
+</script>
+
+Username: <input type="text" name="user" id="loginUser"><br />
+<!--Email: <input type="email" name="email" id="loginEmail"><br />
+Password: <input type="password" name="password" id="loginPass">-->
+<button onClick="sendData();" name="Send">Send Data</Button>
+
+<p id="message">
+
+</p>
+
+
+
+
+{% endblock %}

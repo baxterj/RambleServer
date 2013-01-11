@@ -31,7 +31,7 @@ v1_api.register(DeleteAccountResource())
 v1_api.register(UpdateAccountResource())
 v1_api.register(UpdateFavouriteResource())
 v1_api.register(UpdateDoneItResource())
-
+v1_api.register(ForgotPasswordResource())
 
 
 urlpatterns = patterns('',
@@ -49,5 +49,5 @@ urlpatterns = patterns('',
 	url(r'^api/', include(v1_api.urls)),
 	# url(r'^login/', 'rambleon.views.login'),
 	# url(r'^register/', 'rambleon.views.register'),
-	# url(r'^test/', 'rambleon.views.test'),
+	#url(r'^test/', 'rambleon.views.test'),
 )

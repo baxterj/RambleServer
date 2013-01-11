@@ -96,3 +96,7 @@ class SpeedTrackData(models.Model):
 class ApiKeys(models.Model):
 	user = models.ForeignKey(User)
 	key = models.CharField(max_length=64)
+
+class AuthLinkCode(models.Model):
+	user = models.ForeignKey(User)
+	code = models.CharField(max_length=40)

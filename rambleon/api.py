@@ -256,6 +256,24 @@ class RegistrationResource(ModelResource):
 	def dehydrate(self, bundle):
 		return checkLogin(bundle)
 
+class ForgotPasswordResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'forgotpassword'
+		authentication = Authentication()
+		authorization = MyLoginAuthorization()
+		list_allowed_methods = ['post',]
+		always_return_data = True
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		return postHandlers.forgotPassword(bundle)
+
+	def dehydrate(self, bundle):
+		bundle.data = {
+			'message': 'Email sent to: ' + bundle.obj.email
+		}
+		return bundle
+
 class MyNoteImageAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
 		return True

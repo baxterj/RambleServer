@@ -4,6 +4,7 @@ from models import *
 import string
 from decimal import *
 import auth
+from django.core.mail import send_mail
 
 #Methods here should take a tastypie bundle
 #they should return the modified bundle or 
@@ -314,5 +315,31 @@ def favourite(bundle):
 			newFav.save()
 		else:
 			raise Http404('Favourite record does not exist')
+
+	return bundle
+
+def forgotPassword(bundle):
+	try:
+		userObj = User.objects.get(username__iexact=bundle.data.get('user'))
+	except Exception:
+		raise Http404('Username does not Exist')
+
+	newCode = AuthLinkCode(user=userObj, code=auth.genApiKey(userObj.username))
+	newCode.save()
+
+	emailStr = 'Dear ' + userObj.username + ',\n\n'
+	emailStr += 'We have received a request to reset your Ramble Online password.\n\n'
+	emailStr += 'Please visit the following link to reset your password:\n'
+	emailStr += 'http://www.rambleonline.com/resetPassword.html?code=' + newCode.code+'\n\n'
+	emailStr += 'If you did not request this email, there is no need to do anything.\n\n'
+	emailStr += 'Regards,\nRamble Online Support'
+
+	try:
+		send_mail('Ramble Online Password Reset Request', emailStr, 'support@rambleonline.com',
+	 [userObj.email], fail_silently=False)
+	except Exception:
+		raise Http404('Email could not be sent at this time, please try later')
+
+	bundle.obj = userObj
 
 	return bundle

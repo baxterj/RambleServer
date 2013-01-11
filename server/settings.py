@@ -30,6 +30,14 @@ DATABASES = {
 #comment this line for local testing, remember to uncomment for heroku
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
+
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'mail.rambleonline.com'
+EMAIL_PORT = 26
+EMAIL_HOST_USER = 'support@rambleonline.com'
+EMAIL_HOST_PASSWORD = 'jamesisgod!!'
+
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

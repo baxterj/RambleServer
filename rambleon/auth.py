@@ -38,7 +38,7 @@ def genApiKey(name):
 	random.seed()
 	bits = str(random.getrandbits(24))
 	h = hashlib.sha1()
-	h.update('apikey' + name + 'bits')
+	h.update('apikey' + name + bits)
 	return str(h.hexdigest())
 
 

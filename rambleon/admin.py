@@ -26,7 +26,7 @@ class UserDoneInline(admin.TabularInline):
 
 class UserAdmin(admin.ModelAdmin):
 	inlines = [UserFaveInline, UserDoneInline]
-	list_display = ('username', 'email', 'pwHash', 'lastLogin')
+	list_display = ('username', 'email', 'pwHash', 'lastLogin', 'regDate')
 	readonly_fields = ('regDate',)
 
 admin.site.register(User, UserAdmin)
