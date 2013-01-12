@@ -79,11 +79,9 @@ class MyUpdateAuthorization(Authorization):
 
 #includes search
 class RouteResource(ModelResource):
-	#pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
-	# pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True,
+	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
+	# pathpoints = fields.ToManyField('rambleon.api.PathPointResource', full=True,
 	# 	attribute=lambda bundle: bundle.obj.pathpoints.all().order_by('orderNum'))
-	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', full=True,
-		attribute=lambda bundle: bundle.obj.pathpoints.all().order_by('orderNum'))
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
 	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
 	class Meta:
