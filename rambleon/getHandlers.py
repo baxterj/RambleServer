@@ -116,8 +116,8 @@ def escapeDict(inp):
 	for key in inp:
 		if isinstance(inp[key], basestring):
 			inp[key] = escape(inp[key])
-		elif isinstance(inp[key], dict):
-			inp[key] = escapeDict(inp[key])
+		#elif isinstance(inp[key], dict):
+			#inp[key] = escapeDict(inp[key])
 		elif isinstance(inp[key], list):
 			if not key == 'pathpoints':
 				newList = []

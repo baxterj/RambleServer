@@ -22,4 +22,4 @@ def route(request, route_id):
 # 	return render_to_response('rambleon/register.html')
 
 # def test(request):
-# 	return render_to_response('rambleon/testForgotPass.html')
+	# return render_to_response('rambleon/register.html')

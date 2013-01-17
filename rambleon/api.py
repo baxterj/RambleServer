@@ -9,6 +9,7 @@ import getHandlers
 from string import *
 from decimal import *
 
+sanitizeInput = True
 
 
 class MyApiKeyAuthentication(Authentication):
@@ -97,6 +98,9 @@ class RouteResource(ModelResource):
 		return getHandlers.escapeBundle(getHandlers.dehydrateSingleRoute(bundle=bundle))
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
+
 		return postHandlers.handleNewRoute(bundle)
 
 #get a list of routes for the my routes/favourite routes/done routes lists
@@ -127,6 +131,8 @@ class UpdateRouteResource(ModelResource):
 		authorization = MyUpdateAuthorization()
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.updateRoute(bundle)
 
 class DeleteRouteResource(ModelResource):
@@ -139,6 +145,8 @@ class DeleteRouteResource(ModelResource):
 		authorization = MyUpdateAuthorization()
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.deleteRoute(bundle)
 
 class KeywordResource(ModelResource):
@@ -185,7 +193,7 @@ class UserResource(ModelResource):
 
 	def dehydrate(self, bundle):
 		#removes the resource_uri field
-		bundle.data.pop('resource_uri') 
+		bundle.data.pop('resource_uri')
 		return getHandlers.escapeBundle(bundle)
 
 class AccountResource(ModelResource):
@@ -210,6 +218,8 @@ class UpdateAccountResource(ModelResource):
 		list_allowed_methods = ['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.updateAccount(bundle)
 
 class DeleteAccountResource(ModelResource):
@@ -222,6 +232,8 @@ class DeleteAccountResource(ModelResource):
 		list_allowed_methods = ['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.deleteAccount(bundle)
 
 class ApiKeysResource(ModelResource):
@@ -234,6 +246,8 @@ class ApiKeysResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return bundle #do nothing, but need to override method so nothing happens..
 
 	def dehydrate(self, bundle):
@@ -249,6 +263,8 @@ class RegistrationResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.handleRegister(bundle)
 
 	def dehydrate(self, bundle):
@@ -264,6 +280,8 @@ class ForgotPasswordResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.forgotPassword(bundle)
 
 	def dehydrate(self, bundle):
@@ -304,6 +322,8 @@ class NoteResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.handleNewNote(bundle)
 
 	def dehydrate(self, bundle):
@@ -319,6 +339,8 @@ class UpdateNoteResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.updateNote(bundle)
 
 class DeleteNoteResource(ModelResource):
@@ -331,6 +353,8 @@ class DeleteNoteResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.deleteNote(bundle)
 
 class ImageResource(ModelResource):
@@ -345,6 +369,8 @@ class ImageResource(ModelResource):
 		always_return_data = True
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.handleNewImage(bundle)
 
 	def dehydrate(self, bundle):
@@ -360,6 +386,8 @@ class UpdateImageResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.updateImage(bundle)
 
 class DeleteImageResource(ModelResource):
@@ -372,6 +400,8 @@ class DeleteImageResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.deleteImage(bundle)
 
 class UpdateDoneItResource(ModelResource):
@@ -384,6 +414,8 @@ class UpdateDoneItResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.doneIt(bundle)
 
 class UpdateFavouriteResource(ModelResource):
@@ -396,4 +428,6 @@ class UpdateFavouriteResource(ModelResource):
 		list_allowed_methods=['post',]
 
 	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.favourite(bundle)

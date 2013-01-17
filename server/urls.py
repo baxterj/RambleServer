@@ -49,5 +49,5 @@ urlpatterns = patterns('',
 	url(r'^api/', include(v1_api.urls)),
 	# url(r'^login/', 'rambleon.views.login'),
 	# url(r'^register/', 'rambleon.views.register'),
-	#url(r'^test/', 'rambleon.views.test'),
+	# url(r'^test/', 'rambleon.views.test'),
 )

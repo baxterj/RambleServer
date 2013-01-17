@@ -5,10 +5,15 @@ import string
 from decimal import *
 import auth
 from django.core.mail import send_mail
+import getHandlers
 
 #Methods here should take a tastypie bundle
 #they should return the modified bundle or 
 #raise a Http404('error description')
+
+def sanitizeInput(bundle):
+	bundle.data = getHandlers.escapeDict(bundle.data)
+	return bundle
 
 def handleRegister(bundle):
 	
@@ -343,3 +348,4 @@ def forgotPassword(bundle):
 	bundle.obj = userObj
 
 	return bundle
+
