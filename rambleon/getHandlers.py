@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from models import *
 import geography
 import string
+from django.utils.html import escape
 
 def dehydrateRoutesList(bundle):
 	if bundle.obj.favourites.all().count() < 1:
@@ -105,3 +106,23 @@ def filterRouteKeywords(routes, keywordString):
 	routes = routes.filter(keywords__keyword__in=keywords)
 
 	return routes
+
+
+#prevent injection attacks by escaping html elements before return
+def escapeBundle(bundle):
+	return escapeDict(bundle.data)
+
+def escapeDict(inp):
+	for key in inp:
+		if isinstance(inp[key], basestring):
+			inp[key] = escape(inp[key])
+		elif isinstance(inp[key], dict):
+			inp[key] = escapeDict(inp[key])
+		elif isinstance(inp[key], list):
+			if not key == 'pathpoints':
+				newList = []
+				for s in inp[key]:
+					newList.append(escape(s))
+				inp[key] = newList
+	return inp
+

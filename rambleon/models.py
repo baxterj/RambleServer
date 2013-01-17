@@ -87,8 +87,8 @@ class Image(models.Model):
 class SpeedTrackData(models.Model):
 	user = models.ForeignKey(User)
 	dateRecorded = models.DateTimeField(auto_now_add=True)
-	secondsElapsed = models.IntegerField()
-	distanceTravelled = models.IntegerField()
+	speed = models.DecimalField(max_digits=6, decimal_places=2)
+	altitude = models.DecimalField(max_digits=6, decimal_places=2)
 
 	def __unicode__(self):
 		return str(self.user) + ' on ' + str(self.dateRecorded)

@@ -94,7 +94,7 @@ class RouteResource(ModelResource):
 		always_return_data = True
 
 	def dehydrate(self, bundle):
-		return getHandlers.dehydrateSingleRoute(bundle=bundle)
+		return getHandlers.escapeBundle(getHandlers.dehydrateSingleRoute(bundle=bundle))
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		return postHandlers.handleNewRoute(bundle)
@@ -114,7 +114,7 @@ class MyRoutesResource(ModelResource):
 		authorization = MyRoutesAuthorization()
 
 	def dehydrate(self, bundle):
-		return getHandlers.dehydrateRoutesList(bundle=bundle)
+		return getHandlers.escapeBundle(getHandlers.dehydrateRoutesList(bundle=bundle))
 
 class UpdateRouteResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
@@ -186,7 +186,7 @@ class UserResource(ModelResource):
 	def dehydrate(self, bundle):
 		#removes the resource_uri field
 		bundle.data.pop('resource_uri') 
-		return bundle
+		return getHandlers.escapeBundle(bundle)
 
 class AccountResource(ModelResource):
 	class Meta:
@@ -199,7 +199,7 @@ class AccountResource(ModelResource):
 
 	def dehydrate(self, bundle):
 		bundle.data.pop('resource_uri') 
-		return bundle
+		return getHandlers.escapeBundle(bundle)
 
 class UpdateAccountResource(ModelResource):
 	class Meta:
@@ -237,7 +237,7 @@ class ApiKeysResource(ModelResource):
 		return bundle #do nothing, but need to override method so nothing happens..
 
 	def dehydrate(self, bundle):
-		return checkLogin(bundle)
+		return getHandlers.escapeBundle(checkLogin(bundle))
 
 class RegistrationResource(ModelResource):
 	class Meta:
@@ -252,7 +252,7 @@ class RegistrationResource(ModelResource):
 		return postHandlers.handleRegister(bundle)
 
 	def dehydrate(self, bundle):
-		return checkLogin(bundle)
+		return getHandlers.escapeBundle(checkLogin(bundle))
 
 class ForgotPasswordResource(ModelResource):
 	class Meta:
@@ -270,7 +270,7 @@ class ForgotPasswordResource(ModelResource):
 		bundle.data = {
 			'message': 'Email sent to: ' + bundle.obj.email
 		}
-		return bundle
+		return getHandlers.escapeBundle(bundle)
 
 class MyNoteImageAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
@@ -307,7 +307,7 @@ class NoteResource(ModelResource):
 		return postHandlers.handleNewNote(bundle)
 
 	def dehydrate(self, bundle):
-		return getHandlers.dehydrateNote(bundle)
+		return getHandlers.escapeBundle(getHandlers.dehydrateNote(bundle))
 
 class UpdateNoteResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
@@ -348,7 +348,7 @@ class ImageResource(ModelResource):
 		return postHandlers.handleNewImage(bundle)
 
 	def dehydrate(self, bundle):
-		return getHandlers.dehydrateImage(bundle)
+		return getHandlers.escapeBundle(getHandlers.dehydrateImage(bundle))
 
 class UpdateImageResource(ModelResource):
 	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)

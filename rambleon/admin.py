@@ -47,7 +47,7 @@ class ImageAdmin(admin.ModelAdmin):
 admin.site.register(Image, ImageAdmin)
 
 class SpeedTrackDataAdmin(admin.ModelAdmin):
-	list_display = ('user', 'secondsElapsed', 'distanceTravelled')
+	list_display = ('user', 'dateRecorded', 'speed', 'altitude')
 
 admin.site.register(SpeedTrackData, SpeedTrackDataAdmin)
 
