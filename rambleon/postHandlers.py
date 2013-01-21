@@ -349,3 +349,15 @@ def forgotPassword(bundle):
 
 	return bundle
 
+def addTrackData(bundle):
+	try:
+		userObj = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	except Exception:
+		raise Http404('Username does not Exist')
+
+	newItem = SpeedTrackData(user=userObj, dateRecorded=dt.now(), speed=Decimal(bundle.data.get('speed')), altitude=bundle.data.get('altitude'))
+	newItem.save()
+
+	bundle.obj = newItem
+
+	return bundle

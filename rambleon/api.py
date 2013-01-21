@@ -431,3 +431,19 @@ class UpdateFavouriteResource(ModelResource):
 		if(sanitizeInput):
 			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.favourite(bundle)
+
+class TrackDataResource(ModelResource):
+	class Meta:
+		queryset = SpeedTrackData.objects.all()
+		resource_name = 'trackdata'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUpdateAuthorization()
+		list_allowed_methods = ['get', 'post',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
+		return postHandlers.addTrackData(bundle)
+
+	def dehydrate(self, bundle):
+		return getHandlers.escapeBundle(getHandlers.dehydrateTrackData(bundle))

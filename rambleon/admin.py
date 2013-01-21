@@ -11,7 +11,7 @@ class RouteKeywordInline(admin.TabularInline):
 
 class RoutesAdmin(admin.ModelAdmin):
 	inlines = [PointInline, RouteKeywordInline]
-	list_display = ('name', 'creation_date', 'update_date')
+	list_display = ('name', 'user', 'creation_date', 'update_date')
 
 admin.site.register(Route, RoutesAdmin)
 
@@ -65,3 +65,8 @@ class DoneItAdmin(admin.ModelAdmin):
 	list_display=('user', 'route', 'date')
 
 admin.site.register(DoneIt, DoneItAdmin)
+
+class AuthLinkCodeAdmin(admin.ModelAdmin):
+	list_display=('user', 'code')
+
+admin.site.register(AuthLinkCode, AuthLinkCodeAdmin)

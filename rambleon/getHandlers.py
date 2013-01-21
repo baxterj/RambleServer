@@ -92,6 +92,10 @@ def dehydrateNote(bundle):
 	bundle.data['updateDate'] = bundle.data['updateDate'].strftime('%d %b %Y')
 	return bundle
 
+def dehydrateTrackData(bundle):
+	bundle.data['dateRecorded'] = bundle.data['dateRecorded'].strftime('%d %m %Y %H %M %S')
+	return bundle
+
 
 def routesWithinBounds(routes, boundsString):
 	return geography.routesWithinBounds(routes, geography.getCoordsFromBounds(boundsString))

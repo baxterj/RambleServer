@@ -32,6 +32,7 @@ v1_api.register(UpdateAccountResource())
 v1_api.register(UpdateFavouriteResource())
 v1_api.register(UpdateDoneItResource())
 v1_api.register(ForgotPasswordResource())
+v1_api.register(TrackDataResource())
 
 
 urlpatterns = patterns('',
