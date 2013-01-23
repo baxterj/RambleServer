@@ -3,7 +3,7 @@ import dj_database_url
 
 import os
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 DEBUG_TOOLBAR_CONFIG = {
