@@ -3,7 +3,7 @@ import dj_database_url
 
 import os
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -75,12 +75,12 @@ MEDIA_URL = ''
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+# Example: "/home/media/media.lawrence.com/static/" 
+STATIC_ROOT = 'C:/Users/James/Desktop/static-files'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = 'http://www.rambleonline.com/server/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -117,6 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 
     'cors.middleware.AllowOriginMiddleware',
 
