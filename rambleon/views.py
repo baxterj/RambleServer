@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from rambleon.models import Route, PathPoint
 from django.template import Context, loader
 from django.core import serializers
+from django.http import HttpResponseServerError
 
 
 
@@ -23,3 +24,9 @@ def route(request, route_id):
 
 # def test(request):
 	# return render_to_response('rambleon/register.html')
+
+def custom500view(request):
+	t = loader.get_template('500.html')
+	#type, value, tb = sys.exc_info(),
+	print 'trying to load 500 template'
+	return HttpResponseServerError(t.render(Context({'error_message': 'hello error'})))

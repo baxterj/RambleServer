@@ -25,7 +25,7 @@ def checkLogin(bundle):
 			bundle.data['key'] = ApiKeys.objects.create(user=userObj, key=genApiKey(name=name)).key
 		return bundle
 	else:
-		raise Http404('Invalid Password')
+		return Http404('Invalid Password')
 
 
 def encryptPass(passw, username):

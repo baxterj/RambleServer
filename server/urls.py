@@ -34,6 +34,7 @@ v1_api.register(UpdateDoneItResource())
 v1_api.register(ForgotPasswordResource())
 v1_api.register(TrackDataResource())
 
+handler500 = 'rambleon.views.custom500view'
 
 urlpatterns = patterns('',
 	# Examples:
@@ -51,4 +52,5 @@ urlpatterns = patterns('',
 	# url(r'^login/', 'rambleon.views.login'),
 	# url(r'^register/', 'rambleon.views.register'),
 	# url(r'^test/', 'rambleon.views.test'),
+	
 )
