@@ -300,7 +300,7 @@ class MyNoteImageAuthorization(Authorization):
 			others = object_list.exclude(user__username__iexact=request.GET.get('user'))
 			others = others.filter(private=False) #remove private routes from list of others' routes
 			notes = (my | others).distinct()
-			#implement this for note searching
+			#implement this for note searching if decide to do in future
 			# if request.GET.get('filterwords') != None:
 			# 	routes = getHandlers.filterRouteKeywords(routes, request.GET.get('filterwords'))
 			if request.GET.get('bounds') != None:

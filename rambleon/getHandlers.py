@@ -114,7 +114,9 @@ def filterRouteKeywords(routes, keywordString):
 
 #prevent injection attacks by escaping html elements before return
 def escapeBundle(bundle):
-	return escapeDict(bundle.data)
+	if not isinstance(bundle, Http404):
+		return escapeDict(bundle.data)
+	return bundle
 
 def escapeDict(inp):
 	for key in inp:

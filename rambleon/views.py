@@ -25,8 +25,8 @@ def route(request, route_id):
 # def test(request):
 	# return render_to_response('rambleon/register.html')
 
-def custom500view(request):
-	t = loader.get_template('500.html')
-	#type, value, tb = sys.exc_info(),
-	print 'trying to load 500 template'
-	return HttpResponseServerError(t.render(Context({'error_message': 'hello error'})))
+# def custom500view(request):
+# 	t = loader.get_template('500.html')
+# 	#type, value, tb = sys.exc_info(),
+# 	print 'trying to load 500 template'
+# 	return HttpResponseServerError(t.render(Context({'error_message': 'hello error'})))
