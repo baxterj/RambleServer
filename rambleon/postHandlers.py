@@ -257,7 +257,7 @@ def deleteImage(bundle):
 def deleteAccount(bundle):
 	passw = bundle.data.get('passw')
 	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
-	if user.pwHash == passw:
+	if user.pwHash == auth.encryptPass(passw, user.username):
 		user.delete()
 	else:
 		raise Http404('Invalid Username or Password')
@@ -267,11 +267,11 @@ def deleteAccount(bundle):
 def updateAccount(bundle):
 	passw = bundle.data.get('passw')
 	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
-	if user.pwHash == passw:
+	if user.pwHash == auth.encryptPass(passw, user.username):
 		if bundle.data.get('email') != None:
 			user.email = bundle.data.get('email')
 		if bundle.data.get('newpassw') != None:
-			user.pwHash = bundle.data.get('newpassw')
+			user.pwHash = auth.encryptPass(bundle.data.get('newpassw'), user.username)
 	else:
 		raise Http404('Invalid Username or Password')
 
