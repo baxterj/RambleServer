@@ -269,7 +269,10 @@ def updateAccount(bundle):
 	user = User.objects.get(username__iexact=bundle.request.GET.get('user'))
 	if user.pwHash == auth.encryptPass(passw, user.username):
 		if bundle.data.get('email') != None:
-			user.email = bundle.data.get('email')
+			if User.objects.filter(email__iexact=email).count() != 0:
+				raise Http404('Email aleady in use')
+			else:
+				user.email = bundle.data.get('email')
 		if bundle.data.get('newpassw') != None:
 			user.pwHash = auth.encryptPass(bundle.data.get('newpassw'), user.username)
 	else:
