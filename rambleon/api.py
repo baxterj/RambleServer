@@ -465,6 +465,7 @@ class TrackDataResource(ModelResource):
 		authorization = MyUpdateAuthorization()
 		list_allowed_methods = ['get', 'post',]
 		max_limit = None
+		limit = 0
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		if(sanitizeInput):
