@@ -6,31 +6,42 @@ import string
 from django.utils.html import escape
 
 def dehydrateRoutesList(bundle):
-	if bundle.obj.favourites.all().count() < 1:
+	favList = bundle.obj.favourites.all()
+	favCount = favList.count()
+	bundle.data['favCount'] = favCount
+
+	if favCount < 1:
 			bundle.data['fav'] = False
 	else:
-		for i in bundle.obj.favourites.all():
+		for i in favList:
 			if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
 				bundle.data['fav'] = True
 				break
 			else:
 				bundle.data['fav'] = False
 
-	if bundle.obj.doneIts.all().count() < 1:
+	doneList = bundle.obj.doneIts.all()
+	doneCount = doneList.count()
+	bundle.data['doneCount'] = doneCount
+
+	if doneCount < 1:
 		bundle.data['done'] = False
 	else:
-		for i in bundle.obj.doneIts.all():
+		for i in doneList:
 			if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
 				bundle.data['done'] = True
 				break
 			else:
 				bundle.data['done'] = False
 
-	if bundle.obj.keywords.all().count() < 1:
+	keyList = bundle.obj.keywords.all()
+	keyCount = keyList.count()
+
+	if keyCount < 1:
 		bundle.data['keywords'] = False
 	else:
 		words = []
-		for i in bundle.obj.keywords.all():
+		for i in keyList:
 			words.append(i)
 		bundle.data['keywords'] = words
 
@@ -42,32 +53,42 @@ def dehydrateRoutesList(bundle):
 	return bundle
 
 def dehydrateSingleRoute(bundle):
+	favList = bundle.obj.favourites.all()
+	favCount = favList.count()
+	bundle.data['favCount'] = favCount
 
-	if bundle.obj.favourites.all().count() < 1:
+	if favCount < 1:
 			bundle.data['fav'] = False
 	else:
-		for i in bundle.obj.favourites.all():
+		for i in favList:
 			if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
 				bundle.data['fav'] = True
 				break
 			else:
 				bundle.data['fav'] = False
 
-	if bundle.obj.doneIts.all().count() < 1:
+	doneList = bundle.obj.doneIts.all()
+	doneCount = doneList.count()
+	bundle.data['doneCount'] = doneCount
+
+	if doneCount < 1:
 		bundle.data['done'] = False
 	else:
-		for i in bundle.obj.doneIts.all():
+		for i in doneList:
 			if i == User.objects.get(username__iexact=bundle.request.GET.get('user')):
 				bundle.data['done'] = True
 				break
 			else:
 				bundle.data['done'] = False
 	
-	if bundle.obj.keywords.all().count() < 1:
+	keyList = bundle.obj.keywords.all()
+	keyCount = keyList.count()
+
+	if keyCount < 1:
 		bundle.data['keywords'] = False
 	else:
 		words = []
-		for i in bundle.obj.keywords.all():
+		for i in keyList:
 			words.append(i)
 		bundle.data['keywords'] = words
 

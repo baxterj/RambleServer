@@ -78,7 +78,6 @@ class MyUpdateAuthorization(Authorization):
 			return object_list.none()
 
 
-#includes search
 class RouteResource(ModelResource):
 	#pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
 	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', full=True,
@@ -102,6 +101,32 @@ class RouteResource(ModelResource):
 			bundle = postHandlers.sanitizeInput(bundle)
 
 		return postHandlers.handleNewRoute(bundle)
+
+
+class SearchRouteResource(ModelResource):
+	#pathpoints = fields.ToManyField('rambleon.api.PathPointResource', 'pathpoints', full=True)
+	pathpoints = fields.ToManyField('rambleon.api.PathPointResource', full=True,
+		attribute=lambda bundle: bundle.obj.pathpoints.filter(orderNum=0))
+	owner = fields.ToOneField('rambleon.api.UserResource', 'user', full=True)
+	keywords = fields.ToManyField('rambleon.api.KeywordResource', 'keywords', full=True)
+	class Meta:
+		queryset = Route.objects.all()
+		resource_name ='searchroute'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyRouteAuthorization()
+		max_limit=30
+		list_allowed_methods = ['get',]
+		always_return_data = True
+
+	def dehydrate(self, bundle):
+		return getHandlers.escapeBundle(getHandlers.dehydrateSingleRoute(bundle=bundle))
+
+	# def obj_create(self, bundle, request=None, **kwargs):
+	# 	if(sanitizeInput):
+	# 		bundle = postHandlers.sanitizeInput(bundle)
+
+	# 	return postHandlers.handleNewRoute(bundle)
+
 
 #get a list of routes for the my routes/favourite routes/done routes lists
 #does not include pathpoints
@@ -439,6 +464,7 @@ class TrackDataResource(ModelResource):
 		authentication = MyApiKeyAuthentication()
 		authorization = MyUpdateAuthorization()
 		list_allowed_methods = ['get', 'post',]
+		max_limit = None
 
 	def obj_create(self, bundle, request=None, **kwargs):
 		if(sanitizeInput):
