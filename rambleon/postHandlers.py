@@ -282,6 +282,20 @@ def updateAccount(bundle):
 	bundle.obj = user
 	return bundle
 
+def resetPassword(bundle):
+	passw = bundle.data.get('newpassw')
+	code = bundle.data.get('code')
+	try:
+		userObj = AuthLinkCode.objects.get(code=code).user
+	except Exception:
+		raise Http404('Invalid reset code')
+
+	userObj.pwHash = auth.encryptPass(passw, userObj.username)
+	userObj.save()
+	bundle.obj = userObj
+	return bundle
+
+
 def doneIt(bundle):
 	routeID = bundle.data.get('route')
 	boolean = bundle.data.get('set')
@@ -363,4 +377,31 @@ def addTrackData(bundle):
 
 	bundle.obj = newItem
 
+	return bundle
+
+def shareRoute(bundle):
+	try:
+		userObj = User.objects.get(username__iexact=bundle.request.GET.get('user'))
+	except Exception:
+		raise Http404('Username does not Exist')
+
+	emailStr = 'Hi, ' + bundle.data.get('recipient')+'\n\n'
+	emailStr += 'Ramble Online user \'' + userObj.username + '\' has suggested you try out a route!\n'
+	emailStr += userObj.username + ' says: ' + bundle.data.get('message') + '\n\n'
+
+	emailStr += 'Access the route via the following link:\n'
+	emailStr += 'http://www.rambleonline.com/route.html?ref=external&id='+bundle.data.get('route') + ' \n'
+	emailStr += 'Please note you will have to log in in order to see the route.\n\n'
+
+	emailStr += 'Please do not reply to this email, you may contact the sender\nusing their supplied email address: ' + userObj.email + '\n\n'
+
+	emailStr += 'Happy Rambling, \nthe Ramble Online team.\nhttp://www.rambleonline.com'
+
+	try:
+		send_mail('Ramble Online: '+userObj.username+' has shared a route with you', emailStr, 'support@rambleonline.com',
+	 [bundle.data.get('email')], fail_silently=False)
+	except Exception:
+		raise Http404('Email to ' + bundle.data.get('email') +' could not be sent at this time, please try later')
+
+	bundle.obj = userObj
 	return bundle

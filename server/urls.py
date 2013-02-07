@@ -35,6 +35,10 @@ v1_api.register(UpdateFavouriteResource())
 v1_api.register(UpdateDoneItResource())
 v1_api.register(ForgotPasswordResource())
 v1_api.register(TrackDataResource())
+v1_api.register(ShareRouteResource())
+v1_api.register(ResetPasswordResource())
+
+
 
 #handler500 = 'rambleon.views.custom500view'
 

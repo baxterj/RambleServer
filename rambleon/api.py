@@ -221,6 +221,21 @@ class UserResource(ModelResource):
 		bundle.data.pop('resource_uri')
 		return getHandlers.escapeBundle(bundle)
 
+class ShareRouteResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'shareroute'
+		authentication = MyApiKeyAuthentication()
+		authorization = MyUserAuthorization()
+		list_allowed_methods = ['post',]
+		fields = ['username',]
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
+		return postHandlers.shareRoute(bundle)
+
+
 class AccountResource(ModelResource):
 	class Meta:
 		queryset = User.objects.all()
@@ -246,6 +261,8 @@ class UpdateAccountResource(ModelResource):
 		if(sanitizeInput):
 			bundle = postHandlers.sanitizeInput(bundle)
 		return postHandlers.updateAccount(bundle)
+
+
 
 class DeleteAccountResource(ModelResource):
 	class Meta:
@@ -314,6 +331,27 @@ class ForgotPasswordResource(ModelResource):
 			'message': 'Email sent to: ' + bundle.obj.email
 		}
 		return getHandlers.escapeBundle(bundle)
+
+class ResetPasswordResource(ModelResource):
+	class Meta:
+		queryset = User.objects.all()
+		resource_name = 'resetpassword'
+		authentication = Authentication()
+		authorization = MyLoginAuthorization()
+		list_allowed_methods = ['post',]
+		always_return_data = True
+
+	def dehydrate(self, bundle):
+		bundle.data = {
+			'message': 'Password for: ' + bundle.obj.username + ' reset successfully'
+		}
+		return getHandlers.escapeBundle(bundle)
+
+	def obj_create(self, bundle, request=None, **kwargs):
+		if(sanitizeInput):
+			bundle = postHandlers.sanitizeInput(bundle)
+		return postHandlers.resetPassword(bundle)
+
 
 class MyNoteImageAuthorization(Authorization):
 	def is_authorized(self, request, object=None):
