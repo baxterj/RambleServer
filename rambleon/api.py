@@ -497,7 +497,7 @@ class UpdateFavouriteResource(ModelResource):
 
 class TrackDataResource(ModelResource):
 	class Meta:
-		queryset = SpeedTrackData.objects.all()
+		queryset = SpeedTrackData.objects.all().order_by('id')
 		resource_name = 'trackdata'
 		authentication = MyApiKeyAuthentication()
 		authorization = MyUpdateAuthorization()
