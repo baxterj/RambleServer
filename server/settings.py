@@ -35,7 +35,7 @@ EMAIL_USE_TLS = False
 EMAIL_HOST = 'mail.rambleonline.com'
 EMAIL_PORT = 26
 EMAIL_HOST_USER = 'support@rambleonline.com'
-EMAIL_HOST_PASSWORD = 'jamesisgod!!'
+EMAIL_HOST_PASSWORD = os.environ['SMTP_PASSWORD']
 
 
 # Local time zone for this installation. Choices can be found here:
