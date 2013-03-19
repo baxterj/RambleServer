@@ -24,17 +24,23 @@ DATABASES = {
         'PASSWORD': 'jamesisgod',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+        'TEST_NAME': 'test_rambleon',
     }
 }
 
-#comment this line for local testing, remember to uncomment for heroku
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost'),}
+
 
 EMAIL_USE_TLS = False
 EMAIL_HOST = 'mail.rambleonline.com'
 EMAIL_PORT = 26
 EMAIL_HOST_USER = 'support@rambleonline.com'
+
+#comment these lines for local testing, remember to uncomment for heroku
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost'),}
 EMAIL_HOST_PASSWORD = os.environ['SMTP_PASSWORD']
+
+
+
 
 
 # Local time zone for this installation. Choices can be found here:
