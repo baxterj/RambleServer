@@ -16,6 +16,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+#database settings for local testing
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -29,17 +30,15 @@ DATABASES = {
 }
 
 
-
+#SMTP server settings
 EMAIL_USE_TLS = False
 EMAIL_HOST = 'mail.rambleonline.com'
 EMAIL_PORT = 26
 EMAIL_HOST_USER = 'support@rambleonline.com'
 
 #comment these lines for local testing, remember to uncomment for heroku
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost'),}
-EMAIL_HOST_PASSWORD = os.environ['SMTP_PASSWORD']
-
-
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost'),} #overwrite databases var for heroku environment
+EMAIL_HOST_PASSWORD = os.environ['SMTP_PASSWORD'] #password stored as server environment variable for security
 
 
 

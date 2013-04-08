@@ -1,3 +1,10 @@
+"""
+Tests for Ramble Online. Each test class is executed on a fresh test database to minimise interference.
+Order of test execution is not guaranteed
+Functions that deal with complex operations are tested here
+
+"""
+
 from django.test import TestCase
 import auth
 import hashlib

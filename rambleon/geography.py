@@ -1,9 +1,16 @@
+"""
+Geography.py contains functions dealing with geographic coordinates
+
+"""
+
+
 from django.http import Http404
 from datetime import datetime as dt
 from models import *
 from string import *
 from decimal import *
 
+#get routes within the provided map viewport bounds
 #coords is a dict of lat and lng making up a bounding rectangle, swLat, swLng, neLat, neLng
 def routesWithinBounds(routes, coords):
 	for r in routes:
@@ -23,6 +30,8 @@ def routesWithinBounds(routes, coords):
 			routes = routes.exclude(pk=r.pk)
 	return routes
 
+#get notes within the provided map viewport bounds
+#coords is a dict of lat and lng making up a bounding rectangle, swLat, swLng, neLat, neLng
 def notesWithinBounds(notes, coords):
 	for n in notes:
 		try:
@@ -38,7 +47,7 @@ def notesWithinBounds(notes, coords):
 			notes = notes.exclude(pk=n.pk)
 	return notes
 
-
+#split the coordinates string from the request into a dict
 def getCoordsFromBounds(boundsString):
 	coords = split(boundsString, ',')
 	coords = {

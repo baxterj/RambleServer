@@ -1,9 +1,14 @@
+"""
+The Auth file contains functions required to validate, register and generate passwords for users
+
+"""
+
 from models import User, ApiKeys
 from django.http import Http404
 import random
 import hashlib
 
-#get for api key for the provided user, or create one if (for some reason) one doesnt exist
+#get the api key for the provided user, or create one if one doesnt exist yet
 #package this into 
 def checkLogin(bundle):
 	name = bundle.data.get('user')
@@ -28,12 +33,13 @@ def checkLogin(bundle):
 		raise Http404('Invalid Password')
 
 
+#salt password and then encrypt with SHA-1.  Needs to be repeatable for validating login requests
 def encryptPass(passw, username):
 	h = hashlib.sha1()
 	h.update('adgi43g3g' + passw + '4352fmv' + username.lower())
 	return str(h.hexdigest())
 
-
+#generate an API key for name, salt with some random bits
 def genApiKey(name):
 	random.seed()
 	bits = str(random.getrandbits(24))
@@ -41,7 +47,7 @@ def genApiKey(name):
 	h.update('apikey' + name + bits)
 	return str(h.hexdigest())
 
-
+#check provided key matches key stored against user record
 def validKey(name, key):
 	try:
 		userObj = User.objects.get(username__iexact=name)

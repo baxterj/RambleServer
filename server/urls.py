@@ -8,10 +8,11 @@ admin.autodiscover()
 from tastypie.api import Api
 from rambleon.api import *
 
+#set up API with name
 v1_api = Api(api_name='v1')
+#register all resources from ./rambeon/api.py
 v1_api.register(RouteResource())
 v1_api.register(SearchRouteResource())
-
 v1_api.register(PathPointResource())
 v1_api.register(UserResource())
 v1_api.register(ApiKeysResource())

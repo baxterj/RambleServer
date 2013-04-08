@@ -7,13 +7,23 @@ from django.http import HttpResponseServerError
 
 
 
-def index(request):
-	routes = Route.objects.all().order_by('-creation_date')
-	return render_to_response('rambleon/index.html', {'route_list': routes})
 
-def route(request, route_id):
-	route = get_object_or_404(Route, pk=route_id)
-	return render_to_response('rambleon/route.html', {'route': route})#, 'points': route.pathpoint_set().all()})
+"""
+no default views required, as all data is accessed through Tastypie API
+
+"""
+
+
+
+
+
+# def index(request):
+# 	routes = Route.objects.all().order_by('-creation_date')
+# 	return render_to_response('rambleon/index.html', {'route_list': routes})
+
+# def route(request, route_id):
+# 	route = get_object_or_404(Route, pk=route_id)
+# 	return render_to_response('rambleon/route.html', {'route': route})#, 'points': route.pathpoint_set().all()})
 	#return render_to_response('rambleon/route.html')
 
 # def login(request):
