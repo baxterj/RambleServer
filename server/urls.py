@@ -53,8 +53,8 @@ urlpatterns = patterns('',
 
 	# Uncomment the next line to enable the admin:
 	url(r'^admin/', include(admin.site.urls)),
-	url(r'^$', 'rambleon.views.index'),
-	url(r'^route/(?P<route_id>\d+)/$', 'rambleon.views.route'),
+	#url(r'^$', 'rambleon.views.index'),
+	#url(r'^route/(?P<route_id>\d+)/$', 'rambleon.views.route'),
 	url(r'^api/', include(v1_api.urls)),
 	# url(r'^login/', 'rambleon.views.login'),
 	# url(r'^register/', 'rambleon.views.register'),
